@@ -2,4 +2,4 @@
 .ipynb
 .env
 __pycache__/
-data/
+data/"data/" 
