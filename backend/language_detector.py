@@ -1,50 +1,22 @@
-from geezswitch import detect, detect_langs
-from geezswitch import DetectorFactory
-
-# Set seed for consistent results
-DetectorFactory.seed = 0
+import re
 
 def lang_detected(text):
-    """
-    Returns a list: [type, language]
-    type: 'Pure' or 'Mixed'
-    language: 'Amharic' or 'English'
-    """
-    # Script detection for Amharic/Ethiopic characters
-    def has_amharic_script(txt):
-        # Amharic/Ethiopic Unicode range: ሀ (U+1200) to ኿ (U+137F)
-        return any(0x1200 <= ord(char) <= 0x137F for char in txt)
+    geez_pattern = re.compile(r'[\u1200-\u137F]')
+    latin_pattern = re.compile(r'[a-zA-Z]')
     
-    def has_english_script(txt):
-        # Check for ASCII letters
-        return any('a' <= char.lower() <= 'z' for char in txt if char.isalpha())
+    geez_chars = len(geez_pattern.findall(text))
+    latin_chars = len(latin_pattern.findall(text))
+    total = geez_chars + latin_chars
     
-    contains_amharic = has_amharic_script(text)
-    contains_english = has_english_script(text)
+    if total == 0:
+        return ['Single', 'English']
     
-    # If both scripts are present, it's mixed
-    if contains_amharic and contains_english:
-        # Determine dominant language by character count
-        amharic_chars = sum(1 for char in text if 0x1200 <= ord(char) <= 0x137F)
-        english_chars = sum(1 for char in text if char.isalpha() and char.isascii())
-        
-        if english_chars >= amharic_chars:
-            return ['Mixed', 'English']
-        else:
-            return ['Mixed', 'Amharic']
+    geez_ratio = geez_chars / total
+    latin_ratio = latin_chars / total
     
-    # If only one script, use geezswitch to determine which language
-    lang = detect(text)
-    
-    if lang == 'amh':
+    if geez_ratio > 0.7:
         return ['Pure', 'Amharic']
-    elif lang == 'en':
+    elif latin_ratio > 0.7:
         return ['Pure', 'English']
     else:
-        # Fallback based on script
-        if contains_amharic:
-            return ['Pure', 'Amharic']
-        elif contains_english:
-            return ['Pure', 'English']
-        else:
-            return ['Pure', 'Other']
+        return ['Mixed', 'English' if latin_ratio >= geez_ratio else 'Amharic']
