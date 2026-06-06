@@ -98,7 +98,7 @@ Returns `{"status": "ok"}`.
 
 ## Dataset
 
-The Amharic model is trained on the dataset from [IsraelAbebe/An-Amharic-News-Text-classification-Dataset](https://github.com/IsraelAbebe/An-Amharic-News-Text-classification-Dataset) ([arXiv:2103.05639](https://arxiv.org/abs/2103.05639)). The baseline in that work used Naive Bayes with TF-IDF/CountVectorizer and achieved ~**62% accuracy**. This project uses **Logistic Regression** with TF-IDF vectorization and achieves significantly higher accuracy (~80–87%).
+The Amharic model is trained on the dataset from [IsraelAbebe/An-Amharic-News-Text-classification-Dataset](https://github.com/IsraelAbebe/An-Amharic-News-Text-classification-Dataset) ([arXiv:2103.05639](https://arxiv.org/abs/2103.05639)). The baseline in that work used Naive Bayes with TF-IDF/CountVectorizer and achieved ~**62% accuracy**. This project uses **Logistic Regression** with TF-IDF vectorization and achieves ~**87% accuracy**.
 
 ## Model Training
 
